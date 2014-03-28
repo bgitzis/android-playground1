@@ -25,6 +25,7 @@ public class PlaceholderFragment extends Fragment {
     private AccSampleCollector accSampleCollector;
     private ListView accResultsView;
     private ArrayAdapter<SensorResult> resultsArrayAdapter;
+    private CollectedDataUploader collectedDataUploader;
 
     public static PlaceholderFragment newInstance(int sectionNumber) {
         PlaceholderFragment fragment = new PlaceholderFragment();
@@ -36,6 +37,7 @@ public class PlaceholderFragment extends Fragment {
 
     public PlaceholderFragment() {
         this.accSampleCollector = new AccSampleCollector();
+        this.collectedDataUploader = new CollectedDataUploader();
     }
 
     @Override
@@ -46,6 +48,7 @@ public class PlaceholderFragment extends Fragment {
         List<SensorResult> lastResults = accSampleCollector.getLastResults();
         resultsArrayAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, lastResults);
         accSampleCollector.addObserver(resultsArrayAdapter);
+        collectedDataUploader.setContext(activity);
     }
 
     @Override
@@ -61,6 +64,12 @@ public class PlaceholderFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 accSampleCollector.collectSample();
+            }
+        });
+        rootView.findViewById(R.id.uploadButton).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                collectedDataUploader.upload();
             }
         });
 
