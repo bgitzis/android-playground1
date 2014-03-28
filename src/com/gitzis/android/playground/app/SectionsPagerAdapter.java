@@ -6,9 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-/**
- * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the sections/tabs/pages.
- */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     private final MainActivity mainActivity;
@@ -25,7 +22,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3; // Show 3 total pages.
+        return 1; // Show 3 total pages.
     }
 
     @Override
