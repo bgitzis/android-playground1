@@ -1,6 +1,7 @@
 bin
 target
 .class
-/.classpath
-/.project
+.classpath
+.project
 gen
+*.log

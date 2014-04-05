@@ -2,22 +2,23 @@ package com.gitzis.android.playground.app;
 
 import java.util.Locale;
 
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-    private final MainActivity mainActivity;
+    private final Activity mainActivity;
 
-    public SectionsPagerAdapter(MainActivity mainActivity, FragmentManager fm) {
+    public SectionsPagerAdapter(Activity mainActivity, FragmentManager fm) {
         super(fm);
         this.mainActivity = mainActivity;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return PlaceholderFragment.newInstance(position + 1);
+        return AccelerometerCollectorFragment.newInstance(position + 1);
     }
 
     @Override

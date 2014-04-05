@@ -20,22 +20,22 @@ import com.gitzis.android.playground.app.model.SensorResult;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PlaceholderFragment extends Fragment {
+public class AccelerometerCollectorFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private AccSampleCollector accSampleCollector;
     private ListView accResultsView;
     private ArrayAdapter<SensorResult> resultsArrayAdapter;
     private CollectedDataUploader collectedDataUploader;
 
-    public static PlaceholderFragment newInstance(int sectionNumber) {
-        PlaceholderFragment fragment = new PlaceholderFragment();
+    public static AccelerometerCollectorFragment newInstance(int sectionNumber) {
+        AccelerometerCollectorFragment fragment = new AccelerometerCollectorFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public PlaceholderFragment() {
+    public AccelerometerCollectorFragment() {
         this.accSampleCollector = new AccSampleCollector();
         this.collectedDataUploader = new CollectedDataUploader();
     }
@@ -45,7 +45,7 @@ public class PlaceholderFragment extends Fragment {
         super.onAttach(activity);
         SensorManager sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
         accSampleCollector.initSensor(sensorManager);
-        List<SensorResult> lastResults = accSampleCollector.getLastResults();
+        List<SensorResult> lastResults = accSampleCollector.getLastSample().getSensorResults();
         resultsArrayAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, lastResults);
         accSampleCollector.addObserver(resultsArrayAdapter);
         collectedDataUploader.setContext(activity);
@@ -57,7 +57,6 @@ public class PlaceholderFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-        //        String string = Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER));
         textView.setText("Accelerometer Demo Fragment");
 
         rootView.findViewById(R.id.collectButton).setOnClickListener(new OnClickListener() {

@@ -28,4 +28,12 @@ public class SensorResult {
         return sb.toString();
     }
 
+    public float[] getValues() {
+        return values;
+    }
+
+    public double getTimeNanos() {
+        return timeNanos;
+    }
+
 }

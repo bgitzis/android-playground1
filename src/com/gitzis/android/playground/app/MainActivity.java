@@ -6,6 +6,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.gitzis.android.playground.app.persistence.SamplesRepository;
+
 public class MainActivity extends ActionBarActivity {
 
     SectionsPagerAdapter mSectionsPagerAdapter;
@@ -20,6 +22,8 @@ public class MainActivity extends ActionBarActivity {
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        SamplesRepository.init(this);
     }
 
     @Override
