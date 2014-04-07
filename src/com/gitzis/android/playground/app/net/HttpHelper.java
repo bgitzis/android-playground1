@@ -1,15 +1,16 @@
 package com.gitzis.android.playground.app.net;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 import android.util.Log;
 
@@ -42,27 +43,48 @@ public class HttpHelper {
         return lines.toString();
     }
 
-    public static void doPost() throws IOException {
+    public static String doPost(String content) throws IOException {
         URL url = makeUrl();
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
             urlConnection.setDoOutput(true);
-            urlConnection.setChunkedStreamingMode(0);
+            urlConnection.setDoInput(true);
+            urlConnection.setFixedLengthStreamingMode(content.length());
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "text/plain; charset=utf8");
+            writeString(content, urlConnection.getOutputStream());
 
-            OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
-            //          writeStream(out);
-
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-            //          readStream(in);
+            int responseCode = urlConnection.getResponseCode();
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                Log.e(HttpHelper.class.getName(), "something bad happen, response code=" + responseCode);
+                return "";
+            }
+            String response = readToString(urlConnection.getInputStream());
+            return response;
         } finally {
             urlConnection.disconnect();
         }
     }
 
+    private static void writeString(String content, OutputStream out) throws IOException {
+        new BufferedOutputStream(out).write(content.getBytes(Charset.forName("UTF-8")));
+    }
+
+    private static String readToString(InputStream is) throws UnsupportedEncodingException, IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line);
+        }
+        is.close();
+        return sb.toString();
+    }
+
     private static URL makeUrl() {
         URL url;
         try {
-            url = new URL("localhost:8080/greeting");
+            url = new URL("localhost:8080/post");
         } catch (MalformedURLException e) {
             throw new RuntimeException("shouldn't happen");
         }
