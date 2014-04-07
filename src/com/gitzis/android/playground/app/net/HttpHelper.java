@@ -11,6 +11,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Map.Entry;
 
 import android.util.Log;
 
@@ -43,26 +45,38 @@ public class HttpHelper {
         return lines.toString();
     }
 
-    public static String doPost(String content) throws IOException {
+    public static String doPost(String content) {
         URL url = makeUrl();
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        HttpURLConnection conn = null;
         try {
-            urlConnection.setDoOutput(true);
-            urlConnection.setDoInput(true);
-            urlConnection.setFixedLengthStreamingMode(content.length());
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Content-Type", "text/plain; charset=utf8");
-            writeString(content, urlConnection.getOutputStream());
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setFixedLengthStreamingMode(content.length());
+            conn.setRequestMethod("POST");
+            //            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("Content-Type", "text/plain; charset=utf8");
+            writeString(content, conn.getOutputStream());
 
-            int responseCode = urlConnection.getResponseCode();
+            int responseCode = conn.getResponseCode();
             if (responseCode != HttpURLConnection.HTTP_OK) {
-                Log.e(HttpHelper.class.getName(), "something bad happen, response code=" + responseCode);
+                //                Log.e(HttpHelper.class.getName(), "something bad happen, response code=" + responseCode);
+                StringBuilder sb = new StringBuilder();
+                for (Entry<String, List<String>> header : conn.getHeaderFields().entrySet()) {
+                    sb.append(header.getKey()).append("=").append(header.getValue()).append("\n");
+                }
+                Log.e(HttpHelper.class.getName(), sb.toString());
                 return "";
             }
-            String response = readToString(urlConnection.getInputStream());
+            String response = readToString(conn.getInputStream());
             return response;
+        } catch (Exception e) {
+            Log.e(HttpHelper.class.getName(), e.getMessage(), e);
+            return "";
         } finally {
-            urlConnection.disconnect();
+            if (conn != null) {
+                conn.disconnect();
+            }
         }
     }
 
@@ -84,9 +98,10 @@ public class HttpHelper {
     private static URL makeUrl() {
         URL url;
         try {
-            url = new URL("localhost:8080/post");
+            url = new URL("http://localhost:8080/post");
         } catch (MalformedURLException e) {
-            throw new RuntimeException("shouldn't happen");
+            Log.wtf(HttpHelper.class.getName(), e);
+            throw new RuntimeException("shouldn't happen", e);
         }
         return url;
     }

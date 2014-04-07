@@ -25,7 +25,8 @@ public class AccSampleCollector implements SensorEventListener {
     public AccSampleCollector() {
         super();
         this.lastResults = new ArrayList<SensorResult>();
-        lastResults.add(new SensorResult(new float[] { 0.0f }, 0.0));
+        this.lastResults.add(new SensorResult(new float[] { 0.0f }, 0.0));
+        this.lastSample = new Sample(Sensor.TYPE_ACCELEROMETER, now(), lastResults);
         this.observers = new ArrayList<BaseAdapter>();
     }
 
