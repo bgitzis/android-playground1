@@ -1,23 +1,23 @@
 package com.gitzis.android.playground.app.net;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map.Entry;
 
 import android.util.Log;
 
 public class HttpHelper {
-    public static String readUrlToString(String urlString) {
+    public static String doGet(String urlString) {
         StringBuilder lines = new StringBuilder();
         int doRetry = 5;
         while (doRetry-- > 0) {
@@ -27,7 +27,7 @@ public class HttpHelper {
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("Accept", "application/json");
                 if (conn.getResponseCode() != 200) {
-                    Log.wtf(HttpHelper.class.getName(), "Failed : HTTP error code : " + conn.getResponseCode());
+                    logNetworkError(conn);
                     Thread.sleep(1000);
                     continue;
                 }
@@ -52,20 +52,17 @@ public class HttpHelper {
             conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setDoInput(true);
-            conn.setFixedLengthStreamingMode(content.length());
+            conn.setChunkedStreamingMode(0);
             conn.setRequestMethod("POST");
             //            conn.setRequestProperty("Accept", "application/json");
-            conn.setRequestProperty("Content-Type", "text/plain; charset=utf8");
-            writeString(content, conn.getOutputStream());
+            //            conn.setRequestProperty("Content-Type", "text/plain; charset=utf8");
+            Writer out = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream(), "UTF-8"));
+            out.write("string=" + content);
+            out.close();
 
             int responseCode = conn.getResponseCode();
             if (responseCode != HttpURLConnection.HTTP_OK) {
-                //                Log.e(HttpHelper.class.getName(), "something bad happen, response code=" + responseCode);
-                StringBuilder sb = new StringBuilder();
-                for (Entry<String, List<String>> header : conn.getHeaderFields().entrySet()) {
-                    sb.append(header.getKey()).append("=").append(header.getValue()).append("\n");
-                }
-                Log.e(HttpHelper.class.getName(), sb.toString());
+                logNetworkError(conn);
                 return "";
             }
             String response = readToString(conn.getInputStream());
@@ -80,8 +77,12 @@ public class HttpHelper {
         }
     }
 
-    private static void writeString(String content, OutputStream out) throws IOException {
-        new BufferedOutputStream(out).write(content.getBytes(Charset.forName("UTF-8")));
+    private static void logNetworkError(HttpURLConnection conn) {
+        StringBuilder sb = new StringBuilder();
+        for (Entry<String, List<String>> header : conn.getHeaderFields().entrySet()) {
+            sb.append(header.getKey()).append("=").append(header.getValue()).append("\n");
+        }
+        Log.e(HttpHelper.class.getName(), sb.toString());
     }
 
     private static String readToString(InputStream is) throws UnsupportedEncodingException, IOException {
@@ -98,7 +99,7 @@ public class HttpHelper {
     private static URL makeUrl() {
         URL url;
         try {
-            url = new URL("http://localhost:8080/post");
+            url = new URL("http://192.168.0.103:8080/post");
         } catch (MalformedURLException e) {
             Log.wtf(HttpHelper.class.getName(), e);
             throw new RuntimeException("shouldn't happen", e);
