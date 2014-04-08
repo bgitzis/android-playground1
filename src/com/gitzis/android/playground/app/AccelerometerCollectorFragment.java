@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gitzis.android.playground.app.analyzers.AccSumSampleAnalyzer;
-import com.gitzis.android.playground.app.model.AnalyzeResult;
 import com.gitzis.android.playground.app.model.Sample;
 import com.gitzis.android.playground.app.model.SensorResult;
 import com.gitzis.android.playground.app.obesrvables.DbDataSetObservable;
@@ -77,7 +76,7 @@ public class AccelerometerCollectorFragment extends Fragment {
         rootView.findViewById(R.id.analyzeButton).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), sampleAnalyzer.analyze().toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), sampleAnalyzer.analyze().toString(), Toast.LENGTH_LONG).show();
             }
         });
 

@@ -28,8 +28,8 @@ public class AnalyzeResult {
 
     @Override
     public String toString() {
-        return String.format("AnalyzeResult [analyzerName=%s, sampleDate=%s, result=%s]", analyzerName, sampleDate,
-                result);
+        return String.format("AnalyzeResult \n analyzerName=%s \n sampleDate=%s \n result=%s", analyzerName,
+                sampleDate, result);
     }
 
 }
