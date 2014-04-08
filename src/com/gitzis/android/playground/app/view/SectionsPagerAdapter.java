@@ -1,6 +1,9 @@
-package com.gitzis.android.playground.app;
+package com.gitzis.android.playground.app.view;
 
 import java.util.Locale;
+
+import com.gitzis.android.playground.app.R;
+import com.gitzis.android.playground.app.R.string;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;

@@ -1,4 +1,4 @@
-package com.gitzis.android.playground.app;
+package com.gitzis.android.playground.app.view;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -7,6 +7,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.gitzis.android.playground.app.R;
+import com.gitzis.android.playground.app.R.id;
+import com.gitzis.android.playground.app.R.layout;
+import com.gitzis.android.playground.app.R.menu;
 import com.gitzis.android.playground.app.persistence.MyDbHelper;
 
 public class MainActivity extends ActionBarActivity {
