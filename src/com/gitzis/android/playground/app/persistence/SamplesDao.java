@@ -9,12 +9,9 @@ import android.provider.BaseColumns;
 import com.gitzis.android.playground.app.model.Sample;
 import com.gitzis.android.playground.app.model.SensorResult;
 import com.gitzis.android.playground.app.persistence.fwk.DbQueryUtil;
+import com.gitzis.android.playground.app.persistence.fwk.SQLiteConsts;
 
 public class SamplesDao {
-    private static final String INTEGER = " INTEGER";
-    private static final String TEXT = " TEXT";
-    private static final String REAL = " REAL"//
-    ;
     public static final String TABLE_NAME = "samples";
     public static final String DEFAULT_SORT_ORDER = "modified DESC";
 
@@ -61,16 +58,25 @@ public class SamplesDao {
         return DbQueryUtil.query(db, TABLE_NAME, SamplesColumns.CMN_UPLOAD_DATE + " is null");
     }
 
+    public static SensorResult mapSensorResult(Cursor cursor) {
+        float[] values = new float[3];
+        float timeNanos = cursor.getFloat(cursor.getColumnIndex(SamplesColumns.CMN_OFFSET_MILLIS));
+        values[0] = cursor.getFloat(cursor.getColumnIndex(SamplesColumns.CMN_X));
+        values[1] = cursor.getFloat(cursor.getColumnIndex(SamplesColumns.CMN_Y));
+        values[2] = cursor.getFloat(cursor.getColumnIndex(SamplesColumns.CMN_Z));
+        return new SensorResult(values, timeNanos);
+    }
+
     static String getCreateTableSql() {
         return "CREATE TABLE " + TABLE_NAME + " (" //
                 + SamplesColumns._ID + " INTEGER PRIMARY KEY,"//
-                + SamplesColumns.CMN_SENSOR_TYPE + INTEGER + ","//
-                + SamplesColumns.CMN_SAMPLE_CREATE_DATE + TEXT + ","//
-                + SamplesColumns.CMN_UPLOAD_DATE + TEXT + ","//
-                + SamplesColumns.CMN_X + REAL + "," //
-                + SamplesColumns.CMN_Y + REAL + ","//
-                + SamplesColumns.CMN_Z + REAL + ","//
-                + SamplesColumns.CMN_OFFSET_MILLIS + REAL//
+                + SamplesColumns.CMN_SENSOR_TYPE + SQLiteConsts.INTEGER + ","//
+                + SamplesColumns.CMN_SAMPLE_CREATE_DATE + SQLiteConsts.TEXT + ","//
+                + SamplesColumns.CMN_UPLOAD_DATE + SQLiteConsts.TEXT + ","//
+                + SamplesColumns.CMN_X + SQLiteConsts.REAL + "," //
+                + SamplesColumns.CMN_Y + SQLiteConsts.REAL + ","//
+                + SamplesColumns.CMN_Z + SQLiteConsts.REAL + ","//
+                + SamplesColumns.CMN_OFFSET_MILLIS + SQLiteConsts.REAL
                 + ");";
     }
 }

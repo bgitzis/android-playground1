@@ -4,29 +4,29 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.gitzis.android.playground.app.net.HttpHelper;
+import com.gitzis.android.playground.app.persistence.AnalysisResultsDao;
+import com.gitzis.android.playground.app.persistence.AnalysisResultsDao.AnalysisResultsColumns;
 import com.gitzis.android.playground.app.persistence.MyDbHelper;
-import com.gitzis.android.playground.app.persistence.SamplesDao;
 
 public class CollectedDataUploader {
     Context context;
-    private SamplesDao samplesDao;
+    private AnalysisResultsDao dao = new AnalysisResultsDao(MyDbHelper.getINSTANCE());
 
     public CollectedDataUploader(Context context) {
         this.context = context;
-        this.samplesDao = new SamplesDao(MyDbHelper.getINSTANCE());
     }
 
     public void upload() {
-        Cursor cursor = samplesDao.getRowsToUpload();
-        if (!cursor.moveToFirst()) {
-            Toast.makeText(context, "nothing to upload", Toast.LENGTH_SHORT).show();
-            return;
+        Cursor cursor = dao.getRowsToUpload();
+        while (cursor.moveToNext()) {
+            String analyzerName = cursor.getString(cursor.getColumnIndex(AnalysisResultsColumns.CMN_ANALYZER_NAME));
+            String date = cursor.getString(cursor.getColumnIndex(AnalysisResultsColumns.CMN_CREATE_DATE));
+            String result = cursor.getString(cursor.getColumnIndex(AnalysisResultsColumns.CMN_ANALYZE_RESULT));
+            doUpload(analyzerName + ":" + date + ":" + result);
+            dao.setUploaded(cursor.getInt(cursor.getColumnIndex(AnalysisResultsColumns._ID)));
         }
-        doUpload("abcd");
-        Toast.makeText(context, "not ready yet", Toast.LENGTH_SHORT).show();
     }
 
     private void doUpload(String data) {

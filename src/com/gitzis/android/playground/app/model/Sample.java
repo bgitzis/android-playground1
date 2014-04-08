@@ -27,6 +27,10 @@ public class Sample {
         return sensorResults;
     }
 
+    public void addSensorResult(SensorResult sensorResult) {
+        sensorResults.add(sensorResult);
+    }
+
     @Override
     public String toString() {
         final int maxLen = 10;

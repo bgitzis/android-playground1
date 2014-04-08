@@ -27,7 +27,11 @@ public class MyDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableSql = SamplesDao.getCreateTableSql();
+        createTable(db, SamplesDao.getCreateTableSql());
+        createTable(db, AnalysisResultsDao.getCreateTableSql());
+    }
+
+    private void createTable(SQLiteDatabase db, String createTableSql) {
         Log.i(LOG_TAG, createTableSql);
         db.execSQL(createTableSql);
     }

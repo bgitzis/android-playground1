@@ -9,5 +9,6 @@
     <string name="large_text">Large Text</string>
     <string name="collectBtnText">Collect</string>
     <string name="uploadBtnText">Upload</string>
+    <string name="analyzeBtnText">Analyze</string>
 
 </resources>

@@ -12,7 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.gitzis.android.playground.app.analyzers.AccSumSampleAnalyzer;
+import com.gitzis.android.playground.app.model.AnalyzeResult;
 import com.gitzis.android.playground.app.model.Sample;
 import com.gitzis.android.playground.app.model.SensorResult;
 import com.gitzis.android.playground.app.obesrvables.DbDataSetObservable;
@@ -27,6 +30,7 @@ public class AccelerometerCollectorFragment extends Fragment {
     private ListView accResultsView;
     private ArrayAdapter<SensorResult> resultsArrayAdapter;
     private CollectedDataUploader collectedDataUploader;
+    private AccSumSampleAnalyzer sampleAnalyzer;
 
     public static AccelerometerCollectorFragment newInstance(int sectionNumber) {
         AccelerometerCollectorFragment fragment = new AccelerometerCollectorFragment();
@@ -47,6 +51,7 @@ public class AccelerometerCollectorFragment extends Fragment {
                 lastSample.getSensorResults());
         accSampleCollector.addObservable(new ViewDataSetObservable(resultsArrayAdapter));
         accSampleCollector.addObservable(new DbDataSetObservable().registerObserverFl(new SamplesWriter(lastSample)));
+        this.sampleAnalyzer = new AccSumSampleAnalyzer();
     }
 
     @Override
@@ -67,6 +72,12 @@ public class AccelerometerCollectorFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 collectedDataUploader.upload();
+            }
+        });
+        rootView.findViewById(R.id.analyzeButton).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), sampleAnalyzer.analyze().toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
