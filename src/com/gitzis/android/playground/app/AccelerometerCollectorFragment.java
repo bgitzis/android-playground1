@@ -1,7 +1,5 @@
 package com.gitzis.android.playground.app;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.hardware.SensorManager;
@@ -15,7 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.gitzis.android.playground.app.model.Sample;
 import com.gitzis.android.playground.app.model.SensorResult;
+import com.gitzis.android.playground.app.obesrvables.DbDataSetObservable;
+import com.gitzis.android.playground.app.obesrvables.ViewDataSetObservable;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -35,20 +36,17 @@ public class AccelerometerCollectorFragment extends Fragment {
         return fragment;
     }
 
-    public AccelerometerCollectorFragment() {
-        this.accSampleCollector = new AccSampleCollector();
-        this.collectedDataUploader = new CollectedDataUploader();
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         SensorManager sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
-        accSampleCollector.initSensor(sensorManager);
-        List<SensorResult> lastResults = accSampleCollector.getLastSample().getSensorResults();
-        resultsArrayAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, lastResults);
-        accSampleCollector.addObserver(resultsArrayAdapter);
-        collectedDataUploader.setContext(activity);
+        this.accSampleCollector = new AccSampleCollector(sensorManager);
+        this.collectedDataUploader = new CollectedDataUploader(activity);
+        Sample lastSample = accSampleCollector.getLastSample();
+        resultsArrayAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1,
+                lastSample.getSensorResults());
+        accSampleCollector.addObservable(new ViewDataSetObservable(resultsArrayAdapter));
+        accSampleCollector.addObservable(new DbDataSetObservable().registerObserverFl(new SamplesWriter(lastSample)));
     }
 
     @Override

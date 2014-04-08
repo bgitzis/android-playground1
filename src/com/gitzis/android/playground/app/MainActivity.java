@@ -1,5 +1,6 @@
 package com.gitzis.android.playground.app;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -16,6 +17,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        disableConnectionReuseIfNecessary();
         setContentView(R.layout.activity_main);
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
@@ -43,4 +45,10 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void disableConnectionReuseIfNecessary() {
+        // HTTP connection reuse which was buggy pre-froyo
+        if (Integer.parseInt(Build.VERSION.SDK) < Build.VERSION_CODES.GINGERBREAD) {
+            System.setProperty("http.keepAlive", "false");
+        }
+    }
 }

@@ -3,9 +3,6 @@ package com.gitzis.android.playground.app.persistence;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
-import com.gitzis.android.playground.app.persistence.fwk.Dao;
-
-@Dao
 public class ConfigDao {
     private static final String TABLE_NAME = "config";
 

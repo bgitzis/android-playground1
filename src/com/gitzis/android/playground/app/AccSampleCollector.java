@@ -8,10 +8,10 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.text.format.Time;
-import android.widget.BaseAdapter;
 
 import com.gitzis.android.playground.app.model.Sample;
 import com.gitzis.android.playground.app.model.SensorResult;
+import com.gitzis.android.playground.app.obesrvables.UsageAgnosticDataSetObservable;
 
 public class AccSampleCollector implements SensorEventListener {
     private static final int NUM_OF_EVENTS = 10;
@@ -19,15 +19,17 @@ public class AccSampleCollector implements SensorEventListener {
     private SensorManager sensorManager;
     double collectionStart = System.nanoTime();
     private List<SensorResult> lastResults;
-    private List<BaseAdapter> observers;
+    private List<UsageAgnosticDataSetObservable> observerables;
     private Sample lastSample;
 
-    public AccSampleCollector() {
+    public AccSampleCollector(SensorManager sensorManager) {
         super();
         this.lastResults = new ArrayList<SensorResult>();
         this.lastResults.add(new SensorResult(new float[] { 0.0f }, 0.0));
         this.lastSample = new Sample(Sensor.TYPE_ACCELEROMETER, now(), lastResults);
-        this.observers = new ArrayList<BaseAdapter>();
+        this.observerables = new ArrayList<UsageAgnosticDataSetObservable>();
+        this.sensorManager = sensorManager;
+        this.accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
 
     @Override
@@ -36,8 +38,8 @@ public class AccSampleCollector implements SensorEventListener {
         if (lastResults.size() == NUM_OF_EVENTS) {
             sensorManager.unregisterListener(this);
             lastSample = new Sample(Sensor.TYPE_ACCELEROMETER, now(), lastResults);
-            for (BaseAdapter observer : observers) {
-                observer.notifyDataSetChanged();
+            for (UsageAgnosticDataSetObservable observable : observerables) {
+                observable.notifyChanged();
             }
         }
     }
@@ -62,13 +64,8 @@ public class AccSampleCollector implements SensorEventListener {
         sensorManager.registerListener(this, accSensor, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
-    public void initSensor(SensorManager sensorManager) {
-        this.sensorManager = sensorManager;
-        this.accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-    }
-
-    public void addObserver(BaseAdapter adapter) {
-        observers.add(adapter);
+    public void addObservable(UsageAgnosticDataSetObservable observable) {
+        observerables.add(observable);
     }
 
 }

@@ -5,13 +5,16 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
-import android.text.format.Time;
 
 import com.gitzis.android.playground.app.model.Sample;
 import com.gitzis.android.playground.app.model.SensorResult;
 import com.gitzis.android.playground.app.persistence.fwk.DbQueryUtil;
 
 public class SamplesDao {
+    private static final String INTEGER = " INTEGER";
+    private static final String TEXT = " TEXT";
+    private static final String REAL = " REAL"//
+    ;
     public static final String TABLE_NAME = "samples";
     public static final String DEFAULT_SORT_ORDER = "modified DESC";
 
@@ -19,7 +22,7 @@ public class SamplesDao {
         private SamplesColumns() {
         }
 
-        public static final String CMN_SENSOR = "sensor_type";
+        public static final String CMN_SENSOR_TYPE = "sensor_type";
         public static final String CMN_SAMPLE_CREATE_DATE = "create_date";
         public static final String CMN_UPLOAD_DATE = "upload_date";
         public static final String CMN_X = "x";
@@ -34,7 +37,7 @@ public class SamplesDao {
         this.dbOpenHelper = dbOpenHelper;
     }
 
-    public void insert(String sensorName, Time sampleCreationTime, Sample sample) {
+    public void insert(Sample sample) {
         SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         for (SensorResult sensorResult : sample.getSensorResults()) {
@@ -47,7 +50,7 @@ public class SamplesDao {
                 contentValues.put(SamplesColumns.CMN_Z, sensorValues[2]);
             }
             contentValues.put(SamplesColumns.CMN_OFFSET_MILLIS, sensorResult.getTimeNanos());
-            contentValues.put(SamplesColumns.CMN_SENSOR, sensorName);
+            contentValues.put(SamplesColumns.CMN_SENSOR_TYPE, sample.getSensorType());
             contentValues.put(SamplesColumns.CMN_SAMPLE_CREATE_DATE, sample.getSampleDate().format2445());
             db.insert(TABLE_NAME, null, contentValues);
         }
@@ -61,12 +64,13 @@ public class SamplesDao {
     static String getCreateTableSql() {
         return "CREATE TABLE " + TABLE_NAME + " (" //
                 + SamplesColumns._ID + " INTEGER PRIMARY KEY,"//
-                + SamplesColumns.CMN_SENSOR + " TEXT,"//
-                + SamplesColumns.CMN_SAMPLE_CREATE_DATE + " TEXT,"//
-                + SamplesColumns.CMN_UPLOAD_DATE + " INTEGER,"//
-                + SamplesColumns.CMN_X + " INTEGER"//
-                + SamplesColumns.CMN_Y + " INTEGER"//
-                + SamplesColumns.CMN_Z + " INTEGER"//
+                + SamplesColumns.CMN_SENSOR_TYPE + INTEGER + ","//
+                + SamplesColumns.CMN_SAMPLE_CREATE_DATE + TEXT + ","//
+                + SamplesColumns.CMN_UPLOAD_DATE + TEXT + ","//
+                + SamplesColumns.CMN_X + REAL + "," //
+                + SamplesColumns.CMN_Y + REAL + ","//
+                + SamplesColumns.CMN_Z + REAL + ","//
+                + SamplesColumns.CMN_OFFSET_MILLIS + REAL//
                 + ");";
     }
 }
