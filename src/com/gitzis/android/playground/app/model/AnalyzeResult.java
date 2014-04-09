@@ -38,7 +38,7 @@ public class AnalyzeResult {
     @Override
     public String toString() {
         return String.format("AnalyzeResult \n id=%s \n analyzerName=%s \n sampleDate=%s \n result=%s", id,
-                analyzerName, sampleDate, result);
+                analyzerName, sampleDate.format2445(), result);
     }
 
 }

@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import com.gitzis.android.playground.app.model.Sample;
 import com.gitzis.android.playground.app.model.SensorResult;
@@ -55,7 +56,10 @@ public class SamplesDao {
 
     public void delete(long l) {
         SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
-        db.delete(TABLE_NAME, SamplesColumns._ID + "=?", new String[] { Long.toString(l) });
+        int changedRows = db.delete(TABLE_NAME, SamplesColumns._ID + "=?", new String[] { Long.toString(l) });
+        if (changedRows == 0) {
+            Log.w(SamplesDao.class.getSimpleName(), "Nothing was deleted for id=" + l);
+        }
     }
 
     public Cursor getRowsToUpload() {
@@ -69,7 +73,9 @@ public class SamplesDao {
         values[0] = cursor.getFloat(cursor.getColumnIndex(SamplesColumns.CMN_X));
         values[1] = cursor.getFloat(cursor.getColumnIndex(SamplesColumns.CMN_Y));
         values[2] = cursor.getFloat(cursor.getColumnIndex(SamplesColumns.CMN_Z));
-        return new SensorResult(values, timeNanos);
+        SensorResult sensorResult = new SensorResult(values, timeNanos);
+        sensorResult.setId(cursor.getLong(cursor.getColumnIndex(SamplesColumns._ID)));
+        return sensorResult;
     }
 
     static String getCreateTableSql() {

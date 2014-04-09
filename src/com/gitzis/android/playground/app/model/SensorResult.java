@@ -41,8 +41,9 @@ public class SensorResult {
         return id;
     }
 
-    public void setId(long id) {
+    public SensorResult setId(long id) {
         this.id = id;
+        return this;
     }
 
 }
