@@ -1,11 +1,12 @@
 package com.gitzis.android.playground.app;
 
+import android.content.ComponentName;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -27,7 +28,8 @@ public class MainActivity extends ActionBarActivity {
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        this.registerReceiver(new PhoneInteractionBroadcastReceiver(), new IntentFilter(Intent.ACTION_SCREEN_ON));
+        ComponentName componentName = startService(new Intent(this, BroadcastRecieverStarterService.class));
+        Log.d(MainActivity.class.getName(), "BroadcastRecieverStarterService started=" + (componentName != null));
         MyDbHelper.init(this);
     }
 
