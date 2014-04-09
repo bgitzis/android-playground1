@@ -2,14 +2,19 @@ package com.gitzis.android.playground.app.view;
 
 import java.util.Locale;
 
-import com.gitzis.android.playground.app.R;
-import com.gitzis.android.playground.app.R.string;
-
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.gitzis.android.playground.app.AccelerometerCollectorFragment;
+import com.gitzis.android.playground.app.R;
+
+/**
+ * Barak: not sure what this class should look like yet.. if at all
+ * 
+ * @author from sample
+ */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     private final Activity mainActivity;

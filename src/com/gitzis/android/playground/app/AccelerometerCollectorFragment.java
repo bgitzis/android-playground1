@@ -1,4 +1,4 @@
-package com.gitzis.android.playground.app.view;
+package com.gitzis.android.playground.app;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,12 +14,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gitzis.android.playground.app.AccSampleCollector;
-import com.gitzis.android.playground.app.CollectedDataUploader;
-import com.gitzis.android.playground.app.R;
-import com.gitzis.android.playground.app.SamplesWriter;
-import com.gitzis.android.playground.app.R.id;
-import com.gitzis.android.playground.app.R.layout;
 import com.gitzis.android.playground.app.analyzers.AccSumSampleAnalyzer;
 import com.gitzis.android.playground.app.model.Sample;
 import com.gitzis.android.playground.app.model.SensorResult;
