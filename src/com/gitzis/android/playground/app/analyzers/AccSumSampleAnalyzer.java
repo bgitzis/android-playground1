@@ -21,7 +21,7 @@ public class AccSumSampleAnalyzer implements SampleAnalyzer {
     SamplesDao samplesDao = new SamplesDao(MyDbHelper.getINSTANCE());
     AnalysisResultsDao analysisResultsDao = new AnalysisResultsDao(MyDbHelper.getINSTANCE());
 
-    //TODO: delete this, it is just for demo
+    //FIXME: delete this, it is just for demo
     public AnalyzeResult analyze() {
         Cursor cursor = samplesDao.getRowsToUpload();
         if (!cursor.moveToFirst()) {
@@ -33,9 +33,12 @@ public class AccSumSampleAnalyzer implements SampleAnalyzer {
         List<SensorResult> sensorResults = new ArrayList<>();
         Sample sample = new Sample(sensorType, newTime(createDate), sensorResults);
         sample.addSensorResult(SamplesDao.mapSensorResult(cursor));
+        int rowCounter = 1;
         while (cursor.moveToNext()) {
+            rowCounter++;
             sample.addSensorResult(SamplesDao.mapSensorResult(cursor));
         }
+        Log.i(AccSumSampleAnalyzer.class.getSimpleName(), "Analyzed " + rowCounter + " SensorResults.");
         AnalyzeResult analyzeResult = analyze(sample);
         analysisResultsDao.insert(analyzeResult);
         return analyzeResult;

@@ -1,5 +1,7 @@
-package com.gitzis.android.playground.app.view;
+package com.gitzis.android.playground.app;
 
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -7,11 +9,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.gitzis.android.playground.app.R;
-import com.gitzis.android.playground.app.R.id;
-import com.gitzis.android.playground.app.R.layout;
-import com.gitzis.android.playground.app.R.menu;
 import com.gitzis.android.playground.app.persistence.MyDbHelper;
+import com.gitzis.android.playground.app.view.SectionsPagerAdapter;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -28,7 +27,7 @@ public class MainActivity extends ActionBarActivity {
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
+        this.registerReceiver(new PhoneInteractionBroadcastReceiver(), new IntentFilter(Intent.ACTION_SCREEN_ON));
         MyDbHelper.init(this);
     }
 
@@ -49,6 +48,7 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressWarnings("deprecation")
     private void disableConnectionReuseIfNecessary() {
         // HTTP connection reuse which was buggy pre-froyo
         if (Integer.parseInt(Build.VERSION.SDK) < Build.VERSION_CODES.GINGERBREAD) {
