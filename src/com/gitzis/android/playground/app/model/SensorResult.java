@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 
 @SuppressLint("DefaultLocale")
 public class SensorResult {
+    long id = -1;
     float[] values;
     double timeNanos;
 
@@ -34,6 +35,14 @@ public class SensorResult {
 
     public double getTimeNanos() {
         return timeNanos;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
 }

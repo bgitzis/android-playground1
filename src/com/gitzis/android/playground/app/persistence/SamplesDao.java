@@ -49,8 +49,13 @@ public class SamplesDao {
             contentValues.put(SamplesColumns.CMN_OFFSET_MILLIS, sensorResult.getTimeNanos());
             contentValues.put(SamplesColumns.CMN_SENSOR_TYPE, sample.getSensorType());
             contentValues.put(SamplesColumns.CMN_SAMPLE_CREATE_DATE, sample.getSampleDate().format2445());
-            db.insert(TABLE_NAME, null, contentValues);
+            sensorResult.setId(db.insert(TABLE_NAME, null, contentValues));
         }
+    }
+
+    public void delete(long l) {
+        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+        db.delete(TABLE_NAME, SamplesColumns._ID + "=?", new String[] { Long.toString(l) });
     }
 
     public Cursor getRowsToUpload() {
@@ -76,7 +81,6 @@ public class SamplesDao {
                 + SamplesColumns.CMN_X + SQLiteConsts.REAL + "," //
                 + SamplesColumns.CMN_Y + SQLiteConsts.REAL + ","//
                 + SamplesColumns.CMN_Z + SQLiteConsts.REAL + ","//
-                + SamplesColumns.CMN_OFFSET_MILLIS + SQLiteConsts.REAL
-                + ");";
+                + SamplesColumns.CMN_OFFSET_MILLIS + SQLiteConsts.REAL + ");";
     }
 }

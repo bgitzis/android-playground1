@@ -41,6 +41,9 @@ public class AccSumSampleAnalyzer implements SampleAnalyzer {
         Log.i(AccSumSampleAnalyzer.class.getSimpleName(), "Analyzed " + rowCounter + " SensorResults.");
         AnalyzeResult analyzeResult = analyze(sample);
         analysisResultsDao.insert(analyzeResult);
+        for (SensorResult sensorResult : sensorResults) {
+            samplesDao.delete(sensorResult.getId());
+        }
         return analyzeResult;
     }
 

@@ -37,7 +37,8 @@ public class AnalysisResultsDao {
         contentValues.put(AnalysisResultsColumns.CMN_ANALYZER_NAME, result.getAnalyzerName());
         contentValues.put(AnalysisResultsColumns.CMN_ANALYZE_RESULT, result.getResult());
         contentValues.put(AnalysisResultsColumns.CMN_CREATE_DATE, result.getSampleDate().format2445());
-        db.insert(TABLE_NAME, null, contentValues);
+        long id = db.insert(TABLE_NAME, null, contentValues);
+        result.setId(id);
     }
 
     public Cursor getRowsToUpload() {
